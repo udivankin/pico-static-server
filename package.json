@@ -1,0 +1,28 @@
+{
+  "name": "pico-static-server",
+  "version": "2.3.4",
+  "description": "Small yet fully functional Node.js static files server with zero dependencies written with ES6",
+  "main": "index.js",
+  "module": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/udivankin/pico-static-server.git"
+  },
+  "keywords": [
+    "static",
+    "server",
+    "file",
+    "http",
+    "assets",
+    "local",
+    "micro",
+    "mini",
+    "tiny",
+    "pico"
+  ],
+  "author": "allx",
+  "license": "MIT"
+}

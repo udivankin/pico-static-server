@@ -1,4 +1,5 @@
 const http = require('http');
+const https = require('https');
 const url = require('url');
 const fs = require('fs');
 const path = require('path');
@@ -39,11 +40,12 @@ const DEFAULT_MIME_TYPE = 'text/plain';
 /**
  * Default options
  *
- * @type {{staticPath: string, port: number}}
+ * @type {Object}
  */
 const DEFAULT_OPTIONS = {
   defaultFile: 'index.html',
-  port: 9000,
+  port: 8080,
+  protocol: 'http',
   staticPath: './',
 };
 
@@ -91,12 +93,13 @@ const getIsDirectory = (url) => fs.statSync(url).isDirectory();
 /**
  * Create server
  *
- * @param {Object} customOptions
+ * @param {{ defaultFile: string, port: number, protocol: string, staticPath: string, key: string, cert: string }} customOptions
+ * @returns {Server}
  */
 const createServer = (customOptions) => {
-  const options = Object.assign(DEFAULT_OPTIONS, customOptions);
+  const options = { ...DEFAULT_OPTIONS, ...customOptions };
 
-  const serverHandle = http.createServer((req, res) => {
+  const responseHandler = (req, res) => {
     if (req.method === 'OPTIONS') {
       respond(res, 200, UNKNOWN_METHOD_RESPONSE_HEADERS);
       return;
@@ -125,11 +128,18 @@ const createServer = (customOptions) => {
     } else {
       respond(res, 404, { 'Content-Length': 0 });
     }
-  }).listen(options.port);
+  }
 
-  console.log(`Static server is listening on port ${options.port}`);
+  const listenCallback = () => console.log(`Static server is listening ${options.protocol} requests on port ${options.port}`);
 
-  return serverHandle;
+  if (options.protocol === 'http') {
+    return http.createServer(responseHandler).listen(options.port, listenCallback)
+  }
+
+  return serverHanhttps.createServer({
+    cert: fs.readFileSync(options.cert),
+    key: fs.readFileSync(options.key),
+  }, responseHandler).listen(options.port, listenCallback);
 };
 
 module.exports = createServer;

@@ -1,5 +1,5 @@
 # Pico-static-server
-Tiny yet fully functional functional Node.js static files server with zero dependencies with HTTPS support.
+Tiny yet fully functional Node.js static files server with zero dependencies and **HTTPS** support.
 
 ### Install
 Via npm:
@@ -14,16 +14,22 @@ You can start right away by running
 ```bash
 node ./examples/pico-http-server.js
 ```
-assuming you put your content into ``./examples/static/`` folder.
+assuming you've put your content into ``./examples/static/`` folder.
 
-HTTPS example requires you to generate SSL cerificates first:
+**HTTPS** example requires you to generate SSL cerificates first:
 ```bash
 cd ./examples
-; Generate 2048-bit RSA private key and remove the password from generated key
+```
+Generate 2048-bit RSA private key and remove the password from generated key
+```bash
 openssl genrsa -des3 -passout pass:x -out localhost.pem 2048 && openssl rsa -passin pass:x -in localhost.pem -out localhost.key && rm localhost.pem
-; Generate a Certificate Signing Request (CSR)
+```
+Generate a Certificate Signing Request (CSR)
+```bash
 openssl req -new -key localhost.key -out localhost.csr
-; Generate a self-signed certificate that is valid for 365 days with sha256 hash and remove CSR
+```
+Generate a self-signed certificate that is valid for 365 days with sha256 hash and remove CSR
+```bash
 openssl x509 -req -sha256 -days 365 -in localhost.csr -signkey localhost.key -out localhost.crt && rm localhost.csr
 ```
 

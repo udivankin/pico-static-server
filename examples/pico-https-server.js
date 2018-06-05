@@ -5,8 +5,8 @@ const staticServer = createServer({
   staticPath: __dirname + '/static',  // defaults to './'
   port: 8080,                         // defaults to 8080
   protocol: 'https',                  // defaults to 'http'
-  cert: __dirname + '/localhost.crt', // defaults to 'localhost.crt'
-  key: __dirname + '/localhost.key',  // defaults to 'localhost.key'
+  cert: __dirname + '/localhost.crt',
+  key: __dirname + '/localhost.key',
 });
 
 // Try opening https://localhost:8080/

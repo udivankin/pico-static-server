@@ -1,6 +1,6 @@
 {
   "name": "pico-static-server",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Small yet fully functional Node.js static files server with zero dependencies with HTTPS support",
   "main": "index.js",
   "module": "index.js",

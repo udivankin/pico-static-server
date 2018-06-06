@@ -1,4 +1,4 @@
-const createServer = require('pico-static-server');
+const createServer = require('./../index.js');
 
 const staticServer = createServer({
   defaultFile: 'defaultfile.html',   // defaults to 'index.html'

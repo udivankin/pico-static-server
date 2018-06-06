@@ -59,25 +59,25 @@ const UNKNOWN_METHOD_RESPONSE_HEADERS = { Allow: 'GET, HEAD', 'Content-Length': 
 /**
  * Perform http response
  *
- * @param {Object} res
+ * @param {Object} response
  * @param {number} code
  * @param {Object} headers
  * @param {string|Buffer} [data]
  */
-const respond = (res, code, headers, data) => {
-  res.writeHead(code, headers, http.STATUS_CODES[code]);
+const respond = (response, code, headers, data) => {
+  response.writeHead(code, headers, http.STATUS_CODES[code]);
 
   if (typeof data !== 'undefined') {
-    res.write(data);
+    response.write(data);
   }
 
-  res.end();
+  response.end();
 };
 
 /**
  * Get mime type according to request path
  *
- * @param url
+ * @param {string} url
  * @returns {string}
  */
 const getMimeType = (url) => MIME_TYPE_MAP[path.parse(url).ext] || DEFAULT_MIME_TYPE;
@@ -85,7 +85,7 @@ const getMimeType = (url) => MIME_TYPE_MAP[path.parse(url).ext] || DEFAULT_MIME_
 /**
  * Get if file is directory
  *
- * @param url
+ * @param {string} url
  * @returns {boolean}
  */
 const getIsDirectory = (url) => fs.statSync(url).isDirectory();
@@ -99,19 +99,18 @@ const getIsDirectory = (url) => fs.statSync(url).isDirectory();
 const createServer = (customOptions) => {
   const options = { ...DEFAULT_OPTIONS, ...customOptions };
 
-  const responseHandler = (req, res) => {
-    if (req.method === 'OPTIONS') {
-      respond(res, 200, UNKNOWN_METHOD_RESPONSE_HEADERS);
+  const responseHandler = (request, response) => {
+    if (request.method === 'OPTIONS') {
+      respond(response, 200, UNKNOWN_METHOD_RESPONSE_HEADERS);
       return;
     }
 
-    if (req.method !== 'GET' && req.method !== 'HEAD') {
-      respond(res, 405, UNKNOWN_METHOD_RESPONSE_HEADERS);
+    if (request.method !== 'GET' && request.method !== 'HEAD') {
+      respond(response, 405, UNKNOWN_METHOD_RESPONSE_HEADERS);
       return;
     }
 
-    const parsedUrl = url.parse(req.url);
-    let requestPath = path.join(options.staticPath, parsedUrl.pathname);
+    let requestPath = path.join(options.staticPath, path.normalize(url.parse(request.url).pathname));
 
     if (fs.existsSync(requestPath)) {
       if (getIsDirectory(requestPath)) {
@@ -121,12 +120,12 @@ const createServer = (customOptions) => {
       const data = fs.readFileSync(requestPath);
 
       if (data instanceof Error) {
-        respond(res, 500, { 'Content-Length': 0 });
+        respond(response, 500, { 'Content-Length': 0 });
       } else {
-        respond(res, 200, { 'Content-type': getMimeType(requestPath), 'Content-length': data.length }, data);
+        respond(response, 200, { 'Content-type': getMimeType(requestPath), 'Content-length': data.length }, data);
       }
     } else {
-      respond(res, 404, { 'Content-Length': 0 });
+      respond(response, 404, { 'Content-Length': 0 });
     }
   }
 
@@ -136,7 +135,7 @@ const createServer = (customOptions) => {
     return http.createServer(responseHandler).listen(options.port, listenCallback)
   }
 
-  return serverHanhttps.createServer({
+  return https.createServer({
     cert: fs.readFileSync(options.cert),
     key: fs.readFileSync(options.key),
   }, responseHandler).listen(options.port, listenCallback);

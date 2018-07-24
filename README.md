@@ -1,5 +1,5 @@
 # Pico-static-server
-Tiny yet fully functional Node.js static files server with zero dependencies and *HTTPS* support.
+Tiny yet fully functional Node.js zero-dependencies static files server with **HTTPS** support.
 
 ### Install
 Via npm:
@@ -53,10 +53,10 @@ or even *HTTPS* one:
   const createServer = require('pico-static-server');
 
   const staticServer = createServer({
-    defaultFile: 'index.html',  // defaults to 'index.html'
-    staticPath: __dirname + '/static',     // defaults to './'
-    port: 8080,                 // defaults to 8080
-    protocol: 'https',          // defaults to 'http'
+    defaultFile: 'index.html',         // defaults to 'index.html'
+    staticPath: __dirname + '/static', // defaults to './'
+    port: 8080,                        // defaults to 8080
+    protocol: 'https',                 // defaults to 'http'
     cert: __dirname + '/localhost.crt',
     key: __dirname + '/localhost.key',
   });

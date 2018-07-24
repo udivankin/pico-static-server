@@ -93,10 +93,16 @@ const getIsDirectory = (url) => fs.statSync(url).isDirectory();
 /**
  * Create server
  *
- * @param {{ defaultFile: string, port: number, protocol: string, staticPath: string, key: string, cert: string }} customOptions
- * @returns {Server}
+ * @param {Object} [customOptions] Options
+ * @param {string} [customOptions.defaultFile] Path to default file (e.g. index.html) 
+ * @param {string} [customOptions.staticPath] Path to the folder from where all files would be served
+ * @param {number} [customOptions.port] HTTP port
+ * @param {string} [customOptions.protocol] HTTP protocol (https or http)
+ * @param {string} [customOptions.cert] Path to SSL cert file
+ * @param {string} [customOptions.key] Path to SSL key file
+ * @returns {http.Server|https.Server}
  */
-const createServer = (customOptions) => {
+const createServer = (customOptions = {}) => {
   const options = { ...DEFAULT_OPTIONS, ...customOptions };
 
   const responseHandler = (request, response) => {
